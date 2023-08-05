@@ -1,5 +1,5 @@
-import ApiForm from '@/components/Appform'
-import Image from 'next/image'
+import ApiForm from '@/components/Appform';
+import Image from 'next/image';
 
 export default function Home() {
   return (
@@ -8,5 +8,5 @@ export default function Home() {
         <ApiForm/>
       </div>
     </main>
-  )
+  );
 }
