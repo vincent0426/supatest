@@ -1,4 +1,5 @@
 import { Configuration, OpenAIApi } from 'openai';
+import 'dotenv/config';
 
 export const connection_test = async () => {
   const configuration = new Configuration({
