@@ -1,9 +1,35 @@
 'use client';
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
+import { Button } from '@/components/ui/button';
+
 import { useSchemaAtom } from '@/atoms';
 import React, { useState } from 'react';
+import { Input } from '@/components/ui/input';
 
-export const ConnectionForm = () => {
+function ConnectionForm({ url, setUrl, anon, setAnon }: any) {
+  return (
+    <div className="flex flex-col gap-4 text-white">
+      <Input type="text" value={url} onChange={(e) => setUrl(e.target.value)} placeholder="URL" />
+      <Input type="text" value={anon} onChange={(e) => setAnon(e.target.value)} placeholder="API Key" />
+    </div>
+  );
+};
+
+
+export function ConnectionButton() {
+  const [open, setOpen] = useState(false);
+  
   // Set this to your Supabase Credentials if you want to test it out
   const [url, setUrl] = useState('');
   const [anon, setAnon] = useState('');
@@ -11,8 +37,7 @@ export const ConnectionForm = () => {
   
   const {schema, setSchema} = useSchemaAtom();
   
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleConnect = () => {
     setError('');
 
     if (!url || !anon) {
@@ -84,30 +109,25 @@ export const ConnectionForm = () => {
     }
 
   };
-
   
   return (
-    <>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>
-            URL:
-            <input className="text-blue-500" type="text" value={url} onChange={(e) => setUrl(e.target.value)} />
-          </label>
-        </div>
-        <div>
-          <label>
-            API Key:
-            <input className="text-blue-500" type="text" value={anon} onChange={(e) => setAnon(e.target.value)} />
-          </label>
-        </div>
-        {error && <div>{error}</div>}
-        <button type="submit">Connect!</button>
-      </form>
-      
-      <button onClick={handlePost}>
-        Post Data
-      </button>
-    </>
+    <AlertDialog open={open} onOpenChange={setOpen}>
+      <AlertDialogTrigger asChild>
+        <Button>Connect</Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Please Enter Your Connection Details</AlertDialogTitle>
+          <AlertDialogDescription className='text-sm text-red-500'>
+            This will not be saved anywhere.
+            <ConnectionForm url={url} setUrl={setUrl} anon={anon} setAnon={setAnon} />
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction onClick={handleConnect}>Confirm</AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
-};
+}
