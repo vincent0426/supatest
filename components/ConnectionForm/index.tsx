@@ -1,14 +1,15 @@
 'use client';
 
+import { useSchemaAtom } from '@/atoms';
 import React, { useState } from 'react';
 
-const ApiForm = () => {
+export const ConnectionForm = () => {
   // Set this to your Supabase Credentials if you want to test it out
   const [url, setUrl] = useState('');
   const [anon, setAnon] = useState('');
   const [error, setError] = useState('');
   
-  const [schema, setSchema] = useState(null);
+  const {schema, setSchema} = useSchemaAtom();
   
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -101,7 +102,7 @@ const ApiForm = () => {
           </label>
         </div>
         {error && <div>{error}</div>}
-        <button type="submit">Fetch Data</button>
+        <button type="submit">Connect!</button>
       </form>
       
       <button onClick={handlePost}>
@@ -110,5 +111,3 @@ const ApiForm = () => {
     </>
   );
 };
-
-export default ApiForm;
