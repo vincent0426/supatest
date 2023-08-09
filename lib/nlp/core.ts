@@ -25,7 +25,7 @@ export const connection_test = async () => {
   }
 };
 
-export const generate_random_data = async (table: table_data, request_info: string, request_count = 1) => {
+export const generate_random_data = async (table: table_data, request_count = 1) => {
   const configuration = new Configuration({
     apiKey: process.env.OPENAI_API_KEY,
   });
@@ -72,7 +72,7 @@ export const generate_random_data = async (table: table_data, request_info: stri
         const chat = await openai.createChatCompletion({
           model: model_name,
           temperature: 1.7,
-          messages: [{ role: 'user', content: `Generate a fake data whitch satisfy column name:${column.column_name}(${column.column_description}, the current row is :${JSON.stringify(row)}, make sure the data is beleavible ,return the raw result only.` }]
+          messages: [{ role: 'user', content: `Generate a fake data whitch satisfy column name:${column.column_name}(${column.column_description}, the current row is :${JSON.stringify(row)},the table is about :${table.table_description} , make sure the data is beleavible and understandable by human,return the raw result only without label.` }]
         });
         row.push(chat.data.choices[0].message?.content);
       }
