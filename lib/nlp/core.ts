@@ -72,7 +72,7 @@ export const generate_random_data = async (table: table_data, request_count = 1)
         const chat = await openai.createChatCompletion({
           model: model_name,
           temperature: 1.7,
-          messages: [{ role: 'user', content: `Generate a fake data whitch satisfy column name:${column.column_name}(${column.column_description}, the current row is :${JSON.stringify(row)},the table is about :${table.table_description} , make sure the data is beleavible and understandable by human,return the raw result only without label.` }]
+          messages: [{ role: 'user', content: `Generate a fake data whitch satisfy column name:${column.column_name}(${column.column_description}, the current row is :${JSON.stringify(row)},the table is about :${table.table_description} , make sure the data is beleavible and understandable by human ,return the raw result only without label.` }]
         });
         row.push(chat.data.choices[0].message?.content);
       }
