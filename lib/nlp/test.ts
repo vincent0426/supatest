@@ -1,8 +1,10 @@
-import { generate_random_data } from './core';
-import { table_data, db_datatype } from './model';
+import { convert_schema, generate_random_data } from './core';
+import { table_data, db_datatype, supbase_table_data } from './model';
+import { pipeline } from '@xenova/transformers';
 
 
 (async () => {
+  /** 
   const table_1: table_data = {
     table_name: 'message', columns: [
       { column_name: 'sender', column_description: '', column_datatype: db_datatype.username },
@@ -21,4 +23,6 @@ import { table_data, db_datatype } from './model';
   };
   const result_2 = await generate_random_data(table_2, 2);
   console.log(result_2);
+  */
+  let classifier = await pipeline('sentiment-analysis');
 })();
