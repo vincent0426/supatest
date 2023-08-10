@@ -42,6 +42,6 @@ export default async function handler(req: any, res: any) {
     }
   };
   const table_data = await convert_schema(supabase_table_name, supabase_table_data);
-  const result = await generate_random_data(table_data, 1);
+  const result = await generate_random_data(table_data, 3);
   res.status(200).json(result);
 }
