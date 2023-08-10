@@ -28,7 +28,7 @@ export function GenerateForm() {
   console.log(form);
   
   return (
-    <Card className="w-full">
+    <Card className="w-1/2">
       <CardHeader>
         <CardTitle>Generate Data</CardTitle>
         <CardDescription>

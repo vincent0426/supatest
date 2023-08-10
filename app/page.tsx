@@ -9,11 +9,17 @@ import Image from 'next/image';
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col px-24 py-20">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
+      <div className='self-end mb-4 flex items-center space-x-4'>
         <ModeToggle />
-      </div>
-      <div className='self-end mb-4'>
         <ConnectionButton />
+      </div>
+      <div className='self-center mb-4'>
+        <h1 className="flex justify-center text-5xl font-bold mb-4">
+          <span className="text-primary">SupaTest</span>
+        </h1>
+        <h2 className="flex justify-center text-2xl font-semibold mb-4">
+        Generate fake data for your Supabase tables
+        </h2>
       </div>
       <GenerateCard />
     </main>
