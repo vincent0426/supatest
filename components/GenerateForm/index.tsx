@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import {
@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/card';
 
 import { SelectTable } from '../SelectTable';
+import { useSchemaAtom } from '@/atoms';
 
 type Form = {
   table: string | null;
@@ -20,10 +21,41 @@ type Form = {
 };
 
 export function GenerateForm() {
+  const { schema } = useSchemaAtom();
+  // hit /api/nlp
+  
+  // useEffect(() => {
+  //   fetch('/api/nlp', {
+  //     method: 'POST',
+  //     body: JSON.stringify({
+  //       text: 'generate 10 rows for table users',
+  //     }),
+  //   })
+  //     .then((res) => res.json())
+  //     .then((data) => console.log(data));
+  // }, []);
+  
   const [form, setForm] = useState<Form>({
     table: null,
     number: 0,
   });
+  
+  const handleGenerate = () => {
+    if(!schema) return;
+    console.log(schema['definitions'][form.table as string]);
+    fetch('/api/generate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        table: form.table,
+        number: form.number,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => console.log(data));
+  };
   
   console.log(form);
   
@@ -48,7 +80,7 @@ export function GenerateForm() {
       </CardContent>
       <CardFooter className="flex justify-between">
         <Button variant="outline">Cancel</Button>
-        <Button>Generate</Button>
+        <Button onClick={handleGenerate}>Generate</Button>
       </CardFooter>
     </Card>
   );
