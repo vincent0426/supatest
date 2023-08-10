@@ -35,11 +35,26 @@ export const convert_schema = async (table_name: string, supabase_table: supbase
     const internal_column: column_data = { column_name: '', column_description: '', column_datatype: db_datatype.string };
     internal_column.column_name = column_name;
     internal_column.column_description = column.description || '';
-    const classification_result = await classifier(`${internal_column.column_name}(${internal_column.column_description})`, labels);
-    console.log(classification_result);
+    // known db datatype
+    if (column.format === 'uuid') {
+      internal_column.column_datatype = db_datatype.uuid;
+    }
+    else if (column.format === 'bigint') {
+      internal_column.column_datatype = db_datatype.number;
+    }
+    else if (column.format === 'timestamp with time zone') {
+      internal_column.column_datatype = db_datatype.timestamp;
+    }
+    else {
+      const classification_result = await classifier(`${internal_column.column_name}(${internal_column.column_description}):${column.format}`, labels);
+      internal_column.column_datatype = classification_result.labels[0];
+      // need fix
+      if (internal_column.column_datatype === db_datatype.uuid || internal_column.column_datatype === db_datatype.timestamp) {
+        internal_column.column_datatype = db_datatype.string;
+      }
+    }
     table.columns.push(internal_column);
   }
-  const result = await classifier('username', labels);
   return table;
 };
 

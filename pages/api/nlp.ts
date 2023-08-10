@@ -1,4 +1,4 @@
-import { convert_schema } from '../../lib/nlp/core';
+import { convert_schema, generate_random_data } from '../../lib/nlp/core';
 import { supbase_table_data } from '../../lib/nlp/model';
 export default async function handler(req: any, res: any) {
   const supabase_table_name = 'posts';
@@ -41,6 +41,7 @@ export default async function handler(req: any, res: any) {
       }
     }
   };
-  console.log(await convert_schema(supabase_table_name, supabase_table_data));
-  res.status(200).json({ name: 'John Doe' });
+  const table_data = await convert_schema(supabase_table_name, supabase_table_data);
+  const result = await generate_random_data(table_data, 1);
+  res.status(200).json(result);
 }
