@@ -46,6 +46,7 @@ export const convert_schema = async (table_name: string, supabase_table: supbase
       internal_column.column_datatype = db_datatype.timestamp;
     }
     else {
+
       const classification_result = await classifier(`${internal_column.column_name}(${internal_column.column_description}):${column.format}`, labels);
       internal_column.column_datatype = classification_result.labels[0];
       // need fix
@@ -58,10 +59,11 @@ export const convert_schema = async (table_name: string, supabase_table: supbase
   return table;
 };
 
-export const generate_random_data = async (table: table_data, request_count = 1) => {
+export const generate_random_data = async (table: table_data, request_count = 1 , api_key:string) => {
   const configuration = new Configuration({
-    apiKey: process.env.OPENAI_API_KEY,
+    apiKey: api_key,
   });
+  delete configuration.baseOptions.headers['User-Agent'];
   const openai = new OpenAIApi(configuration);
   const result = [];
   for (let iteration = 0; iteration < request_count; iteration++) {
