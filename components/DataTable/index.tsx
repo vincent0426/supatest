@@ -191,6 +191,7 @@ const selectHeader = {
 
 export function DataTable() {
   const { formattedHeaders, setFormattedHeaders, formattedRows, setFormattedRows, isGenerating } = useResultAtom();
+  console.log('isGenerating', isGenerating);
   const { url, anon } = useConnectionAtom();
   const { form }  = useFormAtom();
   const [headers, setHeaders] = useState<ColDef[]>([]);
@@ -352,7 +353,7 @@ export function DataTable() {
   
   
   return (
-    <div className="w-full">
+    <div className="w-full mt-4">
       <Toaster />
       {/* Delete button for selection */}
       {Object.keys(rowSelection).length > 0 && (
@@ -362,63 +363,65 @@ export function DataTable() {
           </Button>
         </div>
       )}
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                    </TableHead>
-                  );
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && 'selected'}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell
-                      key={cell.id}
-                      onDoubleClick={() => handleCellDoubleClick(cell)}
-                    >
-                      {renderCellContent(cell)}
-                    </TableCell>
-                  ))}
+      <div className="rounded-md border w-full">
+        {isGenerating ? (
+          <div className="flex items-center justify-center h-24 w-full min-w-full">
+            <BeatLoader size={8} color="#4a5568" className='flex items-center justify-center h-24 w-full max-w-full' />
+          </div>
+        ) : (
+          <Table className='w-full'>
+            <TableHeader>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => {
+                    return (
+                      <TableHead key={header.id}>
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                      </TableHead>
+                    );
+                  })}
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={headers.length}
-                  className="h-24 text-center"
-                >
-                  {isGenerating ? (
-                    <div className="flex items-center justify-center space-x-2">
-                      <BeatLoader size={8} color="#4a5568" />
-                    </div>
-                  ) : (
-                    <p>
-                      No data found.{' '}
-                    </p>
-                  )}
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+              ))}
+            </TableHeader>
+            <TableBody>
+              {
+                table.getRowModel().rows?.length ? (
+                  table.getRowModel().rows.map((row) => (
+                    <TableRow
+                      key={row.id}
+                      data-state={row.getIsSelected() && 'selected'}
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell
+                          key={cell.id}
+                          onDoubleClick={() => handleCellDoubleClick(cell)}
+                        >
+                          {renderCellContent(cell)}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell
+                      colSpan={headers.length}
+                      className="h-24 text-center"
+                    >
+                      <p>
+                        No data found.{' '}
+                      </p>
+                    </TableCell>
+                  </TableRow>
+                )
+              }
+            </TableBody>
+          </Table>
+        )}
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">

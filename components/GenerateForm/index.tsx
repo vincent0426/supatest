@@ -51,6 +51,7 @@ export function GenerateForm() {
 
   const handleGenerate = async () => {
     setIsGenerating(true);
+    
     if (!schema || !form.table || !classifier.current) return;
 
     const internal_table_schema = await convert_schema(form.table, schema['definitions'][form.table as string], classifier.current);
