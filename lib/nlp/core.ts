@@ -1,10 +1,7 @@
 import { Configuration, OpenAIApi } from 'openai';
 import { db_datatype, table_data, supbase_table_data, column_data } from './model';
 import { faker } from '@faker-js/faker';
-import { pipeline } from '@xenova/transformers';
-import 'dotenv/config';
-
-
+import { Pipeline } from '@xenova/transformers';
 
 const generation_model_name = 'gpt-3.5-turbo';
 const classification_model_name = 'Xenova/mobilebert-uncased-mnli';
@@ -26,9 +23,9 @@ export const connection_test = async () => {
   }
 };
 
-export const convert_schema = async (table_name: string, supabase_table: supbase_table_data) => {
+export const convert_schema = async (table_name: string, supabase_table: supbase_table_data, classifier: Pipeline) => {
   const table: table_data = { table_name: table_name, table_description: '', columns: [] };
-  const classifier = await pipeline('zero-shot-classification', classification_model_name);
+  //const classifier = await pipeline('zero-shot-classification', classification_model_name);
   const labels = Object.values(db_datatype);
   for (const [column_name, column] of Object.entries(supabase_table.properties)) {
     const internal_column: column_data = { column_name: '', column_description: '', column_datatype: db_datatype.string };
@@ -58,7 +55,7 @@ export const convert_schema = async (table_name: string, supabase_table: supbase
   return table;
 };
 
-export const generate_random_data = async (table: table_data, request_count = 1 , api_key:string) => {
+export const generate_random_data = async (table: table_data, request_count = 1, api_key: string) => {
   const configuration = new Configuration({
     apiKey: api_key,
   });

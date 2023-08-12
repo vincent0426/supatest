@@ -8,7 +8,7 @@ const nextConfig = {
       'onnxruntime-node$': false,
     };
     return config;
-  }
+  },
 };
 
 module.exports = nextConfig;

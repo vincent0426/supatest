@@ -2,7 +2,7 @@ import { ConnectionButton } from '@/components/ConnectionButton';
 import GenerateCard from '@/components/GenerateCard';
 import { ModeToggle } from '@/components/ModeToggle';
 import { Toaster } from 'sonner';
-      
+
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col px-24 py-20">
@@ -16,7 +16,7 @@ export default function Home() {
           <span className="text-primary">SupaTest</span>
         </h1>
         <h2 className="flex justify-center text-2xl font-semibold mb-4">
-        Generate fake data for your Supabase tables
+          Generate fake data for your Supabase tables
         </h2>
       </div>
       <div className="flex flex-col items-center">

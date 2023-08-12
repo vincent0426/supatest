@@ -15,6 +15,7 @@ import {
 import { SelectTable } from '../SelectTable';
 import { useFormAtom, useOpenAIAtom, useResultAtom, useSchemaAtom } from '@/atoms';
 import { convert_schema, generate_random_data } from '@/lib/nlp/core';
+import { Pipeline, pipeline } from '@xenova/transformers';
 type Form = {
   table: string | null;
   number: number;
@@ -26,7 +27,7 @@ export function GenerateForm() {
   const { form, setForm } = useFormAtom();
   const { openAIAPIToken } = useOpenAIAtom();
   // Create a reference to the worker object.
-  const worker: MutableRefObject<Worker | null> = useRef(null);
+  const classifier: MutableRefObject<Pipeline | null> = useRef(null);
   // hit /api/nlp
 
   // useEffect(() => {
@@ -39,13 +40,20 @@ export function GenerateForm() {
   //     .then((res) => res.json())
   //     .then((data) => console.log(data));
   // }, []);
-
+  useEffect(() => {
+    const build_classifier = async () => {
+      if (!classifier.current) {
+        classifier.current = await pipeline('zero-shot-classification', 'Xenova/mobilebert-uncased-mnli');
+      }
+    };
+    build_classifier();
+  });
 
   const handleGenerate = async () => {
     setIsGenerating(true);
-    if (!schema || !form.table) return;
+    if (!schema || !form.table || !classifier.current) return;
 
-    const internal_table_schema = await convert_schema(form.table, schema['definitions'][form.table as string]);
+    const internal_table_schema = await convert_schema(form.table, schema['definitions'][form.table as string], classifier.current);
     //user need to put openai api key here
     const result = await generate_random_data(internal_table_schema, form.number, openAIAPIToken);
     setResult(result);
