@@ -29,6 +29,7 @@ import { useConnectionAtom, useFormAtom, useResultAtom } from '@/atoms';
 import { BeatLoader } from 'react-spinners';
 import { Toaster, toast } from 'sonner';
 import { Input } from '../ui/input';
+import { Checkbox } from '../ui/checkbox';
 // const tempData: Payment[] = [
 //   {
 //     id: 'm5gr84i9',
@@ -163,10 +164,30 @@ import { Input } from '../ui/input';
 // ];
 
 type ColDef = {
-  accessorKey: string
-  header: string
+  id: string
+  accessorKey?: string
+  header: any
   cell: ({ row }: { row: any }) => JSX.Element
 }
+
+const selectHeader = {
+  id: 'select',
+  accessorKey: 'select',
+  header: ({ table }: { table: any }) => (
+    <Checkbox
+      checked={table.getIsAllPageRowsSelected()}
+      onCheckedChange={(value: any) => table.toggleAllPageRowsSelected(!!value)}
+      aria-label="Select all"
+    />
+  ),
+  cell: ({ row }: { row: any }) => (
+    <Checkbox
+      checked={row.getIsSelected()}
+      onCheckedChange={(value: any) => row.toggleSelected(!!value)}
+      aria-label="Select row"
+    />
+  ),
+};
 
 export function DataTable() {
   const { formattedHeaders, setFormattedHeaders, formattedRows, setFormattedRows, isGenerating } = useResultAtom();
@@ -181,18 +202,17 @@ export function DataTable() {
 
   useEffect(() => {
     if (formattedHeaders && formattedRows) {
-      // change all headers into 
-      // {
-      //   accessorKey: 'id',
-      //   header: 'ID',
-      //   cell: ({ row }) => <div>{row.getValue('id')}</div>,
-      // },
-      const headers = formattedHeaders.map((header: string) => {
-        return {
+      const headers = [
+        selectHeader,
+      ];
+      
+      formattedHeaders.forEach((header: string) => {
+        headers.push({
+          id: header,
           accessorKey: header,
-          header: header,
+          header: () => <div>{header}</div>,
           cell: ({ row }: { row:any }) => <div>{row.getValue(header)}</div>,
-        };
+        });
       });
       
       setHeaders(headers);
@@ -200,16 +220,13 @@ export function DataTable() {
   }, [formattedHeaders, formattedRows]);
   
   const handleDeleteSelected = () => {
-
-    // Assuming each row has a unique ID, you can filter out the selected rows
-    // rowSelection will be something like {0: true, 1: true} if rows 0 and 1 are selected
-    // only go through the rows that are selected
-
-    const newRows = data.filter((row, index) => !rowSelection[index]);
-    // Now set this new data (you may also need to update your state if you're managing it somewhere else)
-    // You may also need to make API calls or do other actions to delete the rows permanently
-    // For this example, I'll assume you have a state for the data and update it
-    setData(newRows as any);
+    // Get selected rows
+    console.log(rowSelection);
+    // rowSelection: {0: true, 1: true, 2: true}
+    // delete rows 0, 1, 2
+    const newRows = formattedRows.filter((row: any, index: number) => !rowSelection[index]);
+    console.log(newRows);
+    setFormattedRows(newRows);
     // Clear row selections after deletion
     setRowSelection({});
   };
