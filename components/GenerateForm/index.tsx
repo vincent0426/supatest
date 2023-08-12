@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/card';
 
 import { SelectTable } from '../SelectTable';
-import { useSchemaAtom } from '@/atoms';
+import { useOpenAIAtom, useResultAtom, useSchemaAtom } from '@/atoms';
 import { convert_schema, generate_random_data } from '@/lib/nlp/core';
 type Form = {
   table: string | null;
@@ -22,6 +22,8 @@ type Form = {
 
 export function GenerateForm() {
   const { schema } = useSchemaAtom();
+  const { setResult, setIsGenerating } = useResultAtom();
+  const { openAIAPIToken } = useOpenAIAtom();
   // Create a reference to the worker object.
   const worker: MutableRefObject<Worker | null> = useRef(null);
   // hit /api/nlp
@@ -42,28 +44,17 @@ export function GenerateForm() {
     number: 0,
   });
   const handleGenerate = async () => {
+    setIsGenerating(true);
     if (!schema || !form.table) return;
     console.log(schema['definitions'][form.table as string]);
     console.log('running');
     const internal_table_schema = await convert_schema(form.table, schema['definitions'][form.table as string]);
     console.log(internal_table_schema);
     //user need to put openai api key here
-    const result = await generate_random_data(internal_table_schema, form.number,'');
+    const result = await generate_random_data(internal_table_schema, form.number, openAIAPIToken);
     console.log(result);
-    /* 
-    fetch('/api/generate', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        table: form.table,
-        number: form.number,
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => console.log(data));
-      */
+    setResult(result);
+    setIsGenerating(false);
   };
 
   console.log(form);

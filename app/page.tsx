@@ -1,10 +1,6 @@
 import { ConnectionButton } from '@/components/ConnectionButton';
 import GenerateCard from '@/components/GenerateCard';
-import { GenerateForm } from '@/components/GenerateForm';
 import { ModeToggle } from '@/components/ModeToggle';
-import { SelectTable } from '@/components/SelectTable';
-
-import Image from 'next/image';
 
 export default function Home() {
   return (
@@ -21,7 +17,9 @@ export default function Home() {
         Generate fake data for your Supabase tables
         </h2>
       </div>
-      <GenerateCard />
+      <div className="flex flex-col items-center">
+        <GenerateCard />
+      </div>
     </main>
   );
 }

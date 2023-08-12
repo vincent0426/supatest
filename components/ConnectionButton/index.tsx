@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 
-import { useSchemaAtom } from '@/atoms';
+import { useOpenAIAtom, useSchemaAtom } from '@/atoms';
 import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
 
@@ -33,6 +33,8 @@ export function ConnectionButton() {
   // Set this to your Supabase Credentials if you want to test it out
   const [url, setUrl] = useState('');
   const [anon, setAnon] = useState('');
+  const { openAIAPIToken, setOpenAIAPIToken } = useOpenAIAtom();
+  
   const [error, setError] = useState('');
   
   const {schema, setSchema} = useSchemaAtom();
@@ -121,6 +123,10 @@ export function ConnectionButton() {
           <AlertDialogDescription className='text-sm text-red-500'>
             This will not be saved anywhere.
             <ConnectionForm url={url} setUrl={setUrl} anon={anon} setAnon={setAnon} />
+          </AlertDialogDescription>
+          <AlertDialogDescription className='text-sm pt-2'>
+            Your Open AI API Token
+            <Input type="text" value={openAIAPIToken} onChange={(e) => setOpenAIAPIToken(e.target.value)} />
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
