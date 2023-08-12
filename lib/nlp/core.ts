@@ -22,7 +22,6 @@ export const connection_test = async () => {
     });
     return true;
   } catch (e) {
-    console.log(`Encounter error when connecting to OpenAI's API, ${e}`);
     return false;
   }
 };

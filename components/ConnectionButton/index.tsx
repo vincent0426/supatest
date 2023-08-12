@@ -13,11 +13,12 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 
-import { useOpenAIAtom, useSchemaAtom } from '@/atoms';
+import { useConnectionAtom, useOpenAIAtom, useSchemaAtom } from '@/atoms';
 import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
 
-function ConnectionForm({ url, setUrl, anon, setAnon }: any) {
+function ConnectionForm() {
+  const { url, anon, setUrl, setAnon } = useConnectionAtom();
   return (
     <div className="flex flex-col gap-4 text-white">
       <Input type="text" value={url} onChange={(e) => setUrl(e.target.value)} placeholder="URL" />
@@ -31,8 +32,7 @@ export function ConnectionButton() {
   const [open, setOpen] = useState(false);
   
   // Set this to your Supabase Credentials if you want to test it out
-  const [url, setUrl] = useState('');
-  const [anon, setAnon] = useState('');
+  const { url, anon }  = useConnectionAtom();
   const { openAIAPIToken, setOpenAIAPIToken } = useOpenAIAtom();
   
   const [error, setError] = useState('');
@@ -68,48 +68,11 @@ export function ConnectionButton() {
       }
 
       const data = await response.json();
-      console.log(data);
       setSchema(data);
       return data;
     } catch (error: any) {
       setError(error.message || 'An error occurred.');
     }
-  };
-
-  
-  const handlePost = async () => {
-    setError('');
-
-    if (!url || !anon) {
-      setError('URL and API key are required.');
-      return;
-    }
-
-    // Fetch data
-    const data = await fetchData(url, anon);
-    
-    // Post data
-    postData(url, anon, data);
-  };
-  
-  const postData = async (url: string, anon: string, data: object) => {
-    try {
-      const response = await fetch(`${url}/rest/v1/user?select=id`, {
-        headers: {
-          apikey: anon,
-          'Content-Type': 'application/json'
-        },
-      });
-      if (!response.ok) {
-        throw new Error('Error with fetching data');
-      }
-      
-      const data = await response.json();
-      console.log(data);
-    } catch (error: any) {
-      setError(error.message || 'An error occurred.');
-    }
-
   };
   
   return (
@@ -122,7 +85,7 @@ export function ConnectionButton() {
           <AlertDialogTitle>Please Enter Your Connection Details</AlertDialogTitle>
           <AlertDialogDescription className='text-sm text-red-500'>
             This will not be saved anywhere.
-            <ConnectionForm url={url} setUrl={setUrl} anon={anon} setAnon={setAnon} />
+            <ConnectionForm />
           </AlertDialogDescription>
           <AlertDialogDescription className='text-sm pt-2'>
             Your Open AI API Token

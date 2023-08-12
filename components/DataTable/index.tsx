@@ -1,6 +1,6 @@
 'use client';
 
-import * as React from 'react';
+import { useState, useEffect } from 'react';
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -25,8 +25,10 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { useResultAtom } from '@/atoms';
+import { useConnectionAtom, useFormAtom, useResultAtom } from '@/atoms';
 import { BeatLoader } from 'react-spinners';
+import { Toaster, toast } from 'sonner';
+import { Input } from '../ui/input';
 // const tempData: Payment[] = [
 //   {
 //     id: 'm5gr84i9',
@@ -167,12 +169,17 @@ type ColDef = {
 }
 
 export function DataTable() {
-  const {formattedHeaders, formattedRows, isGenerating} = useResultAtom();
-  console.log(isGenerating);
-  console.log(formattedHeaders, formattedRows);
-  const [headers, setHeaders] = React.useState<ColDef[]>([]);
-  
-  React.useEffect(() => {
+  const { formattedHeaders, setFormattedHeaders, formattedRows, setFormattedRows, isGenerating } = useResultAtom();
+  const { url, anon } = useConnectionAtom();
+  const { form }  = useFormAtom();
+  const [headers, setHeaders] = useState<ColDef[]>([]);
+  const [data, setData] = useState<[]>([]);
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+
+  useEffect(() => {
     if (formattedHeaders && formattedRows) {
       // change all headers into 
       // {
@@ -191,16 +198,7 @@ export function DataTable() {
       setHeaders(headers);
     }
   }, [formattedHeaders, formattedRows]);
-  console.log(formattedHeaders, formattedRows);
-  const [data, setData] = React.useState<[]>([]);
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  );
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
-
+  
   const handleDeleteSelected = () => {
 
     // Assuming each row has a unique ID, you can filter out the selected rows
@@ -234,45 +232,111 @@ export function DataTable() {
       rowSelection,
     },
   });
+  
+  const handleConfirm = () => {
+    insertData();
+  };
+  
+  const insertData = async () => {
+    try {
+      const response = await fetch(`${url}/rest/v1/${form.table}`, {
+        headers: {
+          apikey: anon,
+          Authorization: `Bearer ${anon}`,
+          Prefer: 'return=minimal',
+          'Content-Type': 'application/json'
+        }, 
+        method: 'POST',
+        body: JSON.stringify(formattedRows)
+      });
+      if (!response.ok) {
+        throw new Error('Error with fetching data');
+      }
+      
+      setFormattedHeaders([]);
+      setFormattedRows([]);
+      toast.success('Data inserted successfully');
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error(error.message);
+        toast.error(error.message);
+      }
+    }
 
+  };
+  
+  const [editingCell, setEditingCell] = useState<any>(null);
+  const [editedValue, setEditedValue] = useState('');
+  
+  // Step 2: Cell Double-Click Event
+  const handleCellDoubleClick = (cellData: any) => {
+    setEditingCell(cellData);
+    setEditedValue(cellData.getValue(cellData.column.id));
+  };
+  
+  // Step 4: Cell Blur Event
+  const handleCellBlur = (event: any) => {
+    event.preventDefault();
+    if (editingCell) {
+      const rowIndex = editingCell.row.id;
+      const columnIndex = editingCell.column.id;
+  
+      if (event.key === 'Enter') {
+        const newFormattedRows = {
+          ...formattedRows,
+          [rowIndex]: {
+            ...formattedRows[rowIndex],
+            [columnIndex]: editedValue,
+          },
+        };
+        setFormattedRows(newFormattedRows);
+      }
+  
+      setEditingCell(null);
+      setEditedValue('');
+    }
+  };
+  
+  const handleCellKeyDown = (event: any, cell: any) => {
+    if (event.key === 'Enter') {
+      const rowIndex = cell.row.id;
+      const columnIndex = cell.column.id;
+  
+      const newFormattedRows = [...formattedRows];
+      newFormattedRows[rowIndex][columnIndex] = editedValue;
+      setFormattedRows(newFormattedRows);
+      
+      setEditingCell(null);
+      setEditedValue('');
+      event.preventDefault(); // Prevent any default behavior
+    }
+  };
+  
+  // Render the input field if the cell is being edited
+  const renderCellContent = (cell: any) => {
+    const isEditing =
+      editingCell &&
+      editingCell.row.id === cell.row.id &&
+      editingCell.column.id === cell.column.id;
+  
+    if (isEditing) {
+      return (
+        <Input
+          value={editedValue}
+          onChange={(e) => setEditedValue(e.target.value)}
+          autoFocus
+          onKeyDown={(e) => handleCellKeyDown(e, cell)}
+          onBlur={(e) => handleCellBlur(e)}
+        />
+      );
+    }
+    return flexRender(cell.column.columnDef.cell, cell.getContext());
+  };
+  
+  
   return (
     <div className="w-full">
-      <div className="flex items-center py-4">
-        {/* <Input
-          placeholder="Filter emails..."
-          value={(table.getColumn('email')?.getFilterValue() as string) ?? ''}
-          onChange={(event) =>
-            table.getColumn('email')?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        /> */}
-        {/* <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              Columns <ChevronDown className="ml-2 h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu> */}
-      </div>
+      <Toaster />
       {/* Delete button for selection */}
       {Object.keys(rowSelection).length > 0 && (
         <div className="flex items-center justify-end py-4">
@@ -309,11 +373,11 @@ export function DataTable() {
                   data-state={row.getIsSelected() && 'selected'}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+                    <TableCell
+                      key={cell.id}
+                      onDoubleClick={() => handleCellDoubleClick(cell)}
+                    >
+                      {renderCellContent(cell)}
                     </TableCell>
                   ))}
                 </TableRow>
@@ -363,6 +427,13 @@ export function DataTable() {
           </Button>
         </div>
       </div>
+      {formattedRows.length > 0 && (
+        <div className="flex items-center justify-end py-4">
+          <Button variant="default" onClick={handleConfirm}>
+          Publish
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

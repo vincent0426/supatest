@@ -1,10 +1,12 @@
 import { ConnectionButton } from '@/components/ConnectionButton';
 import GenerateCard from '@/components/GenerateCard';
 import { ModeToggle } from '@/components/ModeToggle';
-
+import { Toaster } from 'sonner';
+      
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col px-24 py-20">
+      <Toaster />
       <div className='self-end mb-4 flex items-center space-x-4'>
         <ModeToggle />
         <ConnectionButton />
