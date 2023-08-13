@@ -1,4 +1,4 @@
-# Supatest
+# SupaTest
 
 ## Deployment
 [Supatest](https://supatest-eight.vercel.app)
@@ -10,9 +10,27 @@ https://github.com/vincent0426/supatest/assets/68840528/15708943-00a5-4374-9e08-
 ## Motivation
 Generating realistic and meaningful fake data based on a predefined schema can be a challenging task. This becomes even more complex when large datasets, say over 1000 rows, are required.
 
-Our aim with "Supatest" is to address this gap by creating a solution that not only abides by the given schema but also ensures that the resulting data aligns with real-world scenarios.
+Our aim with "SupaTest" is to address this gap by creating a solution that not only abides by the given schema but also ensures that the resulting data aligns with real-world scenarios.
 
 We do found that Supabase anounced an similar idea in launch week 8 https://www.youtube.com/watch?v=51tCMQPiitQ, but we start this project before the announcement, which makes us believe that this is a good idea.
+
+## How to use?
+1. Create a new project in supabase
+2. Create a new table with schema
+3. Go to Supabase project settings -> API -> Copy the Project URL and Project API keys with anon public role
+4. Go to Supatest and click "Connect" button
+5. Paste the Project URL and Project API keys
+6. Go to OpenAI (https://platform.openai.com/account/api-keys) and create a new API key
+7. Paste the OpenAI API key to Supatest
+8. Click "Connect" button
+9. Select the table you want to generate data
+10. Click "Generate" button
+11. Wait for the data to be generated
+12. Click "Publish" button to publish the data to your supabase project
+13. Head to your supabase project and check the data
+14. Voila!
+15. Give us a star if you like it!
+
 ## Documentation
 
 ### Natural Language Processing
@@ -53,3 +71,8 @@ yarn dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+## Authors
+
+- [Vincent](https://github.com/vincent0426)
+- [Andre](https://github.com/namwoam)
