@@ -1,7 +1,7 @@
 # SupaTest
 
 ## Deployment
-[Supatest](https://supatest-eight.vercel.app)
+[SupaTest](https://supatest-eight.vercel.app)
 
 
 https://github.com/vincent0426/supatest/assets/68840528/15708943-00a5-4374-9e08-12d90eae2011
