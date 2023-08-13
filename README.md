@@ -1,5 +1,14 @@
 # Supatest
 
+## Deployment
+[Supatest](https://supatest-eight.vercel.app)
+
+## Motivation
+Generating realistic and meaningful fake data based on a predefined schema can be a challenging task. This becomes even more complex when large datasets, say over 1000 rows, are required.
+
+Our aim with "Supatest" is to address this gap by creating a solution that not only abides by the given schema but also ensures that the resulting data aligns with real-world scenarios.
+
+We do found that Supabase anounced an similar idea in launch week 8 https://www.youtube.com/watch?v=51tCMQPiitQ, but we start this project before the announcement, which makes us believe that this is a good idea.
 ## Documentation
 
 ### Natural Language Processing
@@ -16,12 +25,16 @@ Beginning with the initial step, our approach involves providing the schema of t
 
 ## Roadmap
 
-1. Fetch schema data from supabase sql.
-2. Auto data generation with LLM (chatgpt/llama2) might encounter problem with linking data across multiple table?
-3. Optionally insert the fake data into user's db with tag (indicates it's fake)
-4. Web based interface
+<!-- checkbox -->
+- [x] 1. Fetch schema data from supabase sql.
+- [x] 2. Auto data generation with LLM (chatgpt/llama2)
+- [x] 3. Insert the fake data into user's db
+- [x] 4. Web based interface
+- [ ] 5. Allow user to customize the prompt for LLM
+- [ ] 6. Allow cross table reference
+- [ ] 7. Fine tune the LLM with user's data for faster generation and better quality
 
-## Next.js
+## Development
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
@@ -30,6 +43,8 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 First, run the development server:
 
 ```bash
+yarn install
+
 yarn dev
 ```
 
