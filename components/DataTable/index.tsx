@@ -353,109 +353,113 @@ export function DataTable() {
   
   
   return (
-    formattedRows.length > 0 && (
-      <div className="w-full mt-4">
-        <Toaster />
-        {/* Delete button for selection */}
-        {Object.keys(rowSelection).length > 0 && (
-          <div className="flex items-center justify-end py-4">
-            <Button variant="destructive" onClick={handleDeleteSelected}>
+    <>
+      <Toaster />
+      {
+        formattedRows.length > 0 && (
+          <div className="w-full mt-4">
+            {/* Delete button for selection */}
+            {Object.keys(rowSelection).length > 0 && (
+              <div className="flex items-center justify-end py-4">
+                <Button variant="destructive" onClick={handleDeleteSelected}>
             Delete
-            </Button>
-          </div>
-        )}
-        <div className="rounded-md border w-full">
-          {isGenerating ? (
-            <div className="flex items-center justify-center h-24 w-full min-w-full">
-              <BeatLoader size={8} color="#4a5568" className='flex items-center justify-center h-24 w-full max-w-full' />
-            </div>
-          ) : (
-            <Table className='w-full'>
-              <TableHeader>
-                {table.getHeaderGroups().map((headerGroup) => (
-                  <TableRow key={headerGroup.id}>
-                    {headerGroup.headers.map((header) => {
-                      return (
-                        <TableHead key={header.id}>
-                          {header.isPlaceholder
-                            ? null
-                            : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                        </TableHead>
-                      );
-                    })}
-                  </TableRow>
-                ))}
-              </TableHeader>
-              <TableBody>
-                {
-                  table.getRowModel().rows?.length ? (
-                    table.getRowModel().rows.map((row) => (
-                      <TableRow
-                        key={row.id}
-                        data-state={row.getIsSelected() && 'selected'}
-                      >
-                        {row.getVisibleCells().map((cell) => (
-                          <TableCell
-                            key={cell.id}
-                            onDoubleClick={() => handleCellDoubleClick(cell)}
-                          >
-                            {renderCellContent(cell)}
-                          </TableCell>
-                        ))}
+                </Button>
+              </div>
+            )}
+            <div className="rounded-md border w-full">
+              {isGenerating ? (
+                <div className="flex items-center justify-center h-24 w-full min-w-full">
+                  <BeatLoader size={8} color="#4a5568" className='flex items-center justify-center h-24 w-full max-w-full' />
+                </div>
+              ) : (
+                <Table className='w-full'>
+                  <TableHeader>
+                    {table.getHeaderGroups().map((headerGroup) => (
+                      <TableRow key={headerGroup.id}>
+                        {headerGroup.headers.map((header) => {
+                          return (
+                            <TableHead key={header.id}>
+                              {header.isPlaceholder
+                                ? null
+                                : flexRender(
+                                  header.column.columnDef.header,
+                                  header.getContext()
+                                )}
+                            </TableHead>
+                          );
+                        })}
                       </TableRow>
-                    ))
-                  ) : (
-                    <TableRow>
-                      <TableCell
-                        colSpan={headers.length}
-                        className="h-24 text-center"
-                      >
-                        <p>
+                    ))}
+                  </TableHeader>
+                  <TableBody>
+                    {
+                      table.getRowModel().rows?.length ? (
+                        table.getRowModel().rows.map((row) => (
+                          <TableRow
+                            key={row.id}
+                            data-state={row.getIsSelected() && 'selected'}
+                          >
+                            {row.getVisibleCells().map((cell) => (
+                              <TableCell
+                                key={cell.id}
+                                onDoubleClick={() => handleCellDoubleClick(cell)}
+                              >
+                                {renderCellContent(cell)}
+                              </TableCell>
+                            ))}
+                          </TableRow>
+                        ))
+                      ) : (
+                        <TableRow>
+                          <TableCell
+                            colSpan={headers.length}
+                            className="h-24 text-center"
+                          >
+                            <p>
                         No data found.{' '}
-                        </p>
-                      </TableCell>
-                    </TableRow>
-                  )
-                }
-              </TableBody>
-            </Table>
-          )}
-        </div>
-        <div className="flex items-center justify-end space-x-2 py-4">
-          <div className="flex-1 text-sm text-muted-foreground">
-            {table.getFilteredSelectedRowModel().rows.length} of{' '}
-            {table.getFilteredRowModel().rows.length} row(s) selected.
-          </div>
-          <div className="space-x-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
-            >
-            Previous
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
-            >
-            Next
-            </Button>
-          </div>
-        </div>
-        {formattedRows.length > 0 && (
-          <div className="flex items-center justify-end py-4">
-            <Button variant="default" onClick={handleConfirm}>
+                            </p>
+                          </TableCell>
+                        </TableRow>
+                      )
+                    }
+                  </TableBody>
+                </Table>
+              )}
+            </div>
+            <div className="flex items-center justify-end space-x-2 py-4">
+              <div className="flex-1 text-sm text-muted-foreground">
+                {table.getFilteredSelectedRowModel().rows.length} of{' '}
+                {table.getFilteredRowModel().rows.length} row(s) selected.
+              </div>
+              <div className="space-x-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => table.previousPage()}
+                  disabled={!table.getCanPreviousPage()}
+                >
+                  Previous
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => table.nextPage()}
+                  disabled={!table.getCanNextPage()}
+                >
+                  Next
+                </Button>
+              </div>
+            </div>
+            {formattedRows.length > 0 && (
+              <div className="flex items-center justify-end py-4">
+                <Button variant="default" onClick={handleConfirm}>
               Publish
-            </Button>
+                </Button>
+              </div>
+            )}
           </div>
-        )}
-      </div>
-    )
+        )
+      }
+    </>
   );
 }
