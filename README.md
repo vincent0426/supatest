@@ -35,7 +35,8 @@ We do found that Supabase anounced an similar idea in launch week 8 https://www.
 
 ### Tech Stack
 - [Supabase](https://supabase.io/) - Database
-- [OpenAI](https://openai.com/) - Language Model
+- [Transformers.js](https://huggingface.co/docs/transformers.js/index) Classification
+- [OpenAI](https://openai.com/) - Text Generation
 - [Next.js](https://nextjs.org/) - Frontend
 - [Tailwind CSS](https://tailwindcss.com/) - CSS Framework
 - [PostgREST](https://postgrest.org/en/stable/) - REST API for Postgres
