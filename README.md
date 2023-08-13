@@ -1,5 +1,7 @@
 # SupaTest
 
+The first two commits are only for testing purpose, and have been completely removed from the project, which does not affect the project in any way.
+
 ## Deployment
 [SupaTest](https://supatest-eight.vercel.app)
 
