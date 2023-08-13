@@ -3,6 +3,10 @@
 ## Deployment
 [Supatest](https://supatest-eight.vercel.app)
 
+
+https://github.com/vincent0426/supatest/assets/68840528/15708943-00a5-4374-9e08-12d90eae2011
+
+
 ## Motivation
 Generating realistic and meaningful fake data based on a predefined schema can be a challenging task. This becomes even more complex when large datasets, say over 1000 rows, are required.
 
