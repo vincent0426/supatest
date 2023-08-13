@@ -16,12 +16,17 @@ import { SelectTable } from '../SelectTable';
 import { useFormAtom, useOpenAIAtom, useResultAtom, useSchemaAtom } from '@/atoms';
 import { convert_schema, generate_random_data } from '@/lib/nlp/core';
 import { Pipeline, pipeline } from '@xenova/transformers';
+import { toast } from 'sonner';
 type Form = {
   table: string | null;
   number: number;
 };
 
+
+import { useRouter } from 'next/navigation';
+
 export function GenerateForm() {
+  const router = useRouter();
   const { schema } = useSchemaAtom();
   const { setResult, setIsGenerating } = useResultAtom();
   const { form, setForm } = useFormAtom();
@@ -51,15 +56,31 @@ export function GenerateForm() {
 
   const handleGenerate = async () => {
     setIsGenerating(true);
-    
-    if (!schema || !form.table || !classifier.current) return;
 
-    const internal_table_schema = await convert_schema(form.table, schema['definitions'][form.table as string], classifier.current);
-    //user need to put openai api key here
-    const result = await generate_random_data(internal_table_schema, form.number, openAIAPIToken);
-    setResult(result);
+    // Check prerequisites
+    if (!schema || !form.table || !classifier.current) {
+      setIsGenerating(false);
+      toast.error('Prerequisites not met!'); 
+      return;
+    }
+
+    // Wrap your actual operations inside a promise to handle both of them
+    const mainOperations = async () => {
+      const internal_table_schema = await convert_schema(form.table!, schema['definitions'][form.table as string], classifier.current!);
+      const result = await generate_random_data(internal_table_schema, form.number, openAIAPIToken);
+      setResult(result);
+    };
+
+    // Toast based on the real operations
+    toast.promise(mainOperations(), {
+      loading: 'Generating...',
+      success: 'Generated successfully',
+      error: 'Error generating data',
+    });
+
     setIsGenerating(false);
   };
+
 
   return (
     <Card className="w-1/2">
@@ -81,7 +102,7 @@ export function GenerateForm() {
         </div>
       </CardContent>
       <CardFooter className="flex justify-between">
-        <Button variant="outline">Cancel</Button>
+        <Button variant="outline" onClick={() => router.push('/')}>Cancel</Button>
         <Button onClick={handleGenerate}>Generate</Button>
       </CardFooter>
     </Card>
