@@ -14,7 +14,7 @@ Our aim with "SupaTest" is to address this gap by creating a solution that not o
 
 We do found that Supabase anounced an similar idea in launch week 8 https://www.youtube.com/watch?v=51tCMQPiitQ, but we start this project before the announcement, which makes us believe that this is a good idea.
 
-## How to use?
+## Usage
 1. Create a new project in supabase
 2. Create a new table with schema
 3. Go to Supabase project settings -> API -> Copy the Project URL and Project API keys with anon public role
@@ -33,6 +33,13 @@ We do found that Supabase anounced an similar idea in launch week 8 https://www.
 
 ## Documentation
 
+### Tech Stack
+- [Supabase](https://supabase.io/) - Database
+- [OpenAI](https://openai.com/) - Language Model
+- [Next.js](https://nextjs.org/) - Frontend
+- [Tailwind CSS](https://tailwindcss.com/) - CSS Framework
+- [PostgREST](https://postgrest.org/en/stable/) - REST API for Postgres
+- [Vercel](https://vercel.com/) - Deployment
 ### Natural Language Processing
 
 Our initial strategy involves generating an entire column within the target table using the language model (in our case, ChatGPT), and we can furnish the schema of the table through a prompt. However, as we intend to execute the same prompt multiple times to obtain various sets of synthetic data, we desire a degree of randomness in our language model's outputs. Yet, incrementing the temperature setting to achieve this randomness leads to unstable outputs from the language model. Consequently, we have adopted an alternative approach.
