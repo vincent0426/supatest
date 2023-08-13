@@ -6,7 +6,11 @@ The first two commits are only for testing purpose, and have been completely rem
 [SupaTest](https://supatest-eight.vercel.app)
 
 
-https://github.com/vincent0426/supatest/assets/68840528/15708943-00a5-4374-9e08-12d90eae2011
+
+
+https://github.com/vincent0426/supatest/assets/68840528/bbc3d006-de6f-4056-a2d6-7eb4beb23c6f
+
+
 
 
 ## Motivation
